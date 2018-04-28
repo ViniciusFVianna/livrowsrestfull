@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +22,8 @@ public class CarroDAO extends BaseDAO{
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            String sql = "select * from carro where id=?";
-            
             conn = getConnection();
-            stmt = conn.prepareStatement(sql);
+            stmt = conn.prepareStatement("select * from carro where id=?");
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
@@ -50,9 +47,8 @@ public class CarroDAO extends BaseDAO{
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-            String sql = "select * from carro where lower(nome) like ?";
           conn = getConnection();
-          stmt = conn.prepareStatement(sql);
+          stmt = conn.prepareStatement("select * from carro where lower(nome) like ?");
           stmt.setString(1, "%" + name.toLowerCase() + "%");
           ResultSet rs = stmt.executeQuery();
             while (rs.next()) {                
@@ -76,9 +72,8 @@ public class CarroDAO extends BaseDAO{
         Connection conn = null;
         PreparedStatement stmt = null;
         try{
-             String sql = "select * from carro where tipo = ?";
             conn = getConnection();
-            stmt = conn.prepareStatement(sql);
+            stmt = conn.prepareStatement("select * from carro where tipo = ?");
             stmt.setString(1, tipo);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
@@ -125,8 +120,8 @@ public class CarroDAO extends BaseDAO{
         c.setId(rs.getLong("id"));
         c.setNome(rs.getString("nome"));
         c.setDesc(rs.getString("descricao"));
-        c.setUrlFoto(rs.getString("urlFoto"));
-        c.setUrlVideo(rs.getString("urlVideo"));
+        c.setUrlFoto(rs.getString("url_foto"));
+        c.setUrlVideo(rs.getString("url_video"));
         c.setLatitude(rs.getString("latitude"));
         c.setLongetude(rs.getString("longetude"));
         c.setTipo(rs.getString("tipo"));
@@ -139,12 +134,10 @@ public class CarroDAO extends BaseDAO{
         try {
             conn = getConnection();
             if (c.getId() == null) {
-                stmt = conn.prepareStatement("insert into carro (nome, descricao, urlFoto, urlVideo,"
-                + "latitude, longetude, tipo) values(?,?,?,?,?,?,?,?)",
+                stmt = conn.prepareStatement("insert into carro (nome, descricao, url_foto, url_video,latitude, longetude, tipo) values(?,?,?,?,?,?,?,?)",
         Statement.RETURN_GENERATED_KEYS);
             }else{
-                stmt = conn.prepareStatement("update carro set nome=?, descricao=?, urlFoto=?,"
-                        + "urlVideo=?, latitude=?, longetude=?, tipo=? where id=?");
+                stmt = conn.prepareStatement("update carro set nome=?, descricao=?, url_foto=?, url_video=?, latitude=?, longetude=?, tipo=? where id=?");
             }
             stmt.setString(1, c.getNome());
             stmt.setString(2, c.getDesc());
@@ -155,14 +148,16 @@ public class CarroDAO extends BaseDAO{
             stmt.setString(7, c.getTipo());
             
             if(c.getId() != null){
+                //Update
                 stmt.setLong(8, c.getId());
             }
             int count = stmt.executeUpdate();
             if (count == 0) {
                 throw new SQLException("Erro ao inserir o carro");
             }
+            //Se inseriu, ler o id auto incremento
             if(c.getId() == null){
-                long id = getGeneratedId(stmt);
+                Long id = getGeneratedId(stmt);
                 c.setId(id);
             }
         } finally {
