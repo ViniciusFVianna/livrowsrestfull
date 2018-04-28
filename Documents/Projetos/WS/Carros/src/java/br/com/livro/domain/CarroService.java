@@ -37,7 +37,7 @@ public class CarroService {
     public boolean delete(Long id){
         try {
             return db.delete(id);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             return false;
         }
     }//fecha delete

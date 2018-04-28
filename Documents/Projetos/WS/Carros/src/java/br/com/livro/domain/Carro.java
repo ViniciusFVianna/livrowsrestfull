@@ -6,11 +6,13 @@
 package br.com.livro.domain;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Vinicius.Vianna
  */
+@XmlRootElement
 public class Carro implements Serializable{
     private static final long serialVersionUID = 1L;
     private long id;

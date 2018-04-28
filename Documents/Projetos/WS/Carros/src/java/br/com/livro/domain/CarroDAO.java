@@ -123,7 +123,7 @@ public class CarroDAO extends BaseDAO{
         c.setUrlFoto(rs.getString("url_foto"));
         c.setUrlVideo(rs.getString("url_video"));
         c.setLatitude(rs.getString("latitude"));
-        c.setLongetude(rs.getString("longetude"));
+        c.setLongetude(rs.getString("longitude"));
         c.setTipo(rs.getString("tipo"));
         return c;
     }//fecha metodo
@@ -134,10 +134,10 @@ public class CarroDAO extends BaseDAO{
         try {
             conn = getConnection();
             if (c.getId() == null) {
-                stmt = conn.prepareStatement("insert into carro (nome, descricao, url_foto, url_video,latitude, longetude, tipo) values(?,?,?,?,?,?,?,?)",
+                stmt = conn.prepareStatement("insert into carro (nome, descricao, url_foto, url_video,latitude, longitude, tipo) values(?,?,?,?,?,?,?,?)",
         Statement.RETURN_GENERATED_KEYS);
             }else{
-                stmt = conn.prepareStatement("update carro set nome=?, descricao=?, url_foto=?, url_video=?, latitude=?, longetude=?, tipo=? where id=?");
+                stmt = conn.prepareStatement("update carro set nome=?, descricao=?, url_foto=?, url_video=?, latitude=?, longitude=?, tipo=? where id=?");
             }
             stmt.setString(1, c.getNome());
             stmt.setString(2, c.getDesc());
@@ -161,12 +161,9 @@ public class CarroDAO extends BaseDAO{
                 c.setId(id);
             }
         } finally {
-            if(stmt != null){
+           
                 stmt.close();
-            }
-            if(conn != null){
-                stmt.close();
-            }
+                conn.close();
         }
     }//fecha save
     
