@@ -13,9 +13,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Vinicius.Vianna
  */
 @XmlRootElement
-public class Carro implements Serializable{
+public class Carro implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    private long id;
+    private Long id;
     private String tipo;
     private String nome;
     private String desc;
@@ -92,6 +93,14 @@ public class Carro implements Serializable{
     public String toString() {
         return "Carro{" + "id=" + id + ", tipo=" + tipo + ", nome=" + nome + ", desc=" + desc + ", urlFoto=" + urlFoto + ", urlVideo=" + urlVideo + ", latitude=" + latitude + ", longetude=" + longetude + '}';
     }
-    
-    
+
+    public Boolean vericationLong(String id) {
+        try {
+            Long num = Long.parseLong(id);
+            return num > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 }//fecha classe

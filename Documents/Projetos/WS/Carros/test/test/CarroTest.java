@@ -14,10 +14,11 @@ import junit.framework.TestCase;
  *
  * @author Vinicius.Vianna
  */
-public class CarroTest extends TestCase{
-    
+public class CarroTest extends TestCase {
+
     private CarroService carroService = new CarroService();
-    public void testListaCarros(){
+
+    public void testListaCarros() {
         List<Carro> carros = carroService.getCarros();
         assertNotNull(carros);
         //Valida se encontrou algo
@@ -32,6 +33,6 @@ public class CarroTest extends TestCase{
         Carro bugatti = carroService.findbyName("Bugatti Veyron").get(0);
         assertEquals("Bugatti Veryon", bugatti.getNome());
     }//fecha testListaCArros
-    
-    
+
 }//fecha classe
+

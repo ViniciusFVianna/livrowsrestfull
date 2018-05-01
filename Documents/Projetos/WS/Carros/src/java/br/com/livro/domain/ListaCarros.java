@@ -14,17 +14,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Vinicius.Vianna
  */
-@XmlRootElement(name="carros")
-public class ListaCarros implements Serializable{
-    
+@XmlRootElement(name = "carros")
+public class ListaCarros implements Serializable {
+
     private static final long serialVersionUID = 1L;
     private List<Carro> carros;
-    @XmlElement(name="carro")
-    public List<Carro> getCarros(){
+
+    @XmlElement(name = "carro")
+    public List<Carro> getCarros() {
         return carros;
     }//fecha getCarros
-    
-    public void setCarros(List<Carro> carros){
+
+    public void setCarros(List<Carro> carros) {
         this.carros = carros;
     }//fecha setCarros
 
@@ -32,5 +33,5 @@ public class ListaCarros implements Serializable{
     public String toString() {
         return "ListaCarros{" + "carros=" + carros + '}';
     }
-    
+
 }//fecha classe

@@ -17,8 +17,9 @@ import java.util.List;
  *
  * @author Vinicius.Vianna
  */
-public class CarroDAO extends BaseDAO{
-    public Carro getCarroById(Long id) throws SQLException{
+public class CarroDAO extends BaseDAO {
+    
+    public Carro getCarroById(Long id) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -26,12 +27,12 @@ public class CarroDAO extends BaseDAO{
             stmt = conn.prepareStatement("select * from carro where id=?");
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 Carro c = createCarro(rs);
                 rs.close();
                 return c;
             }
-        }finally{
+        } finally {
             if (stmt != null) {
                 stmt.close();
             }
@@ -41,17 +42,17 @@ public class CarroDAO extends BaseDAO{
         }//fecha finally
         return null;
     }//fecha getCarros
-    
-    public List<Carro> findByName(String name) throws SQLException{
+
+    public List<Carro> findByName(String name) throws SQLException {
         List<Carro> carros = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
-          conn = getConnection();
-          stmt = conn.prepareStatement("select * from carro where lower(nome) like ?");
-          stmt.setString(1, "%" + name.toLowerCase() + "%");
-          ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {                
+            conn = getConnection();
+            stmt = conn.prepareStatement("select * from carro where lower(nome) like ?");
+            stmt.setString(1, "%" + name.toLowerCase() + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
                 Carro c = createCarro(rs);
                 carros.add(c);
             }
@@ -60,38 +61,39 @@ public class CarroDAO extends BaseDAO{
             if (stmt != null) {
                 stmt.close();
             }
-            if(conn != null){
+            if (conn != null) {
                 conn.close();
             }
         }
         return carros;
     }//fecha findByName
-    
-    public List<Carro> findByTipo(String tipo) throws SQLException{
+
+    public List<Carro> findByTipo(String tipo) throws SQLException {
         List<Carro> carros = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
-        try{
+        try {
             conn = getConnection();
             stmt = conn.prepareStatement("select * from carro where tipo = ?");
             stmt.setString(1, tipo);
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Carro c = createCarro(rs);
                 carros.add(c);
             }//fecha while
             rs.close();
-        }finally{
-           if(stmt != null){
-               stmt.close();
-           }if(conn != null){
-               conn.close();
-           }
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }//fecha finally
         return carros;
     }//fecha findByTipo
-    
-    public List<Carro> getCarros() throws SQLException{
+
+    public List<Carro> getCarros() throws SQLException {
         List<Carro> carros = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -100,22 +102,23 @@ public class CarroDAO extends BaseDAO{
             conn = getConnection();
             stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Carro c = createCarro(rs);
                 carros.add(c);
             }
             rs.close();
         } finally {
-            if(stmt != null){
+            if (stmt != null) {
                 stmt.close();
-            }if(conn != null){
+            }
+            if (conn != null) {
                 conn.close();
             }
         }
         return carros;
     }//fecha metodo
-    
-    public Carro createCarro(ResultSet rs) throws SQLException{
+
+    public Carro createCarro(ResultSet rs) throws SQLException {
         Carro c = new Carro();
         c.setId(rs.getLong("id"));
         c.setNome(rs.getString("nome"));
@@ -127,16 +130,16 @@ public class CarroDAO extends BaseDAO{
         c.setTipo(rs.getString("tipo"));
         return c;
     }//fecha metodo
-    
-    public void save(Carro c) throws SQLException{
+
+    public void save(Carro c) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
             conn = getConnection();
-            if (c.getId() == null) {
+            if (c.vericationLong(String.valueOf(c.getId()))) {
                 stmt = conn.prepareStatement("insert into carro (nome, descricao, url_foto, url_video,latitude, longitude, tipo) values(?,?,?,?,?,?,?,?)",
-        Statement.RETURN_GENERATED_KEYS);
-            }else{
+                        Statement.RETURN_GENERATED_KEYS);
+            } else {
                 stmt = conn.prepareStatement("update carro set nome=?, descricao=?, url_foto=?, url_video=?, latitude=?, longitude=?, tipo=? where id=?");
             }
             stmt.setString(1, c.getNome());
@@ -146,37 +149,37 @@ public class CarroDAO extends BaseDAO{
             stmt.setString(5, c.getLatitude());
             stmt.setString(6, c.getLongetude());
             stmt.setString(7, c.getTipo());
-            
-            if(c.getId() != null){
-                //Update
-                stmt.setLong(8, c.getId());
-            }
+
+//            if(c.getId() != null){
+//                //Update
+//                stmt.setLong(8, c.getId());
+//            }
             int count = stmt.executeUpdate();
             if (count == 0) {
                 throw new SQLException("Erro ao inserir o carro");
             }
             //Se inseriu, ler o id auto incremento
-            if(c.getId() == null){
-                Long id = getGeneratedId(stmt);
-                c.setId(id);
-            }
+//            if(c.getId() == null){
+//                Long id = getGeneratedId(stmt);
+//                c.setId(id);
+//            }
         } finally {
-           
-                stmt.close();
-                conn.close();
+            
+            stmt.close();
+            conn.close();
         }
     }//fecha save
-    
-    public static Long getGeneratedId(Statement stmt) throws SQLException{
+
+    public static Long getGeneratedId(Statement stmt) throws SQLException {
         ResultSet rs = stmt.getGeneratedKeys();
-        if(rs.next()){
+        if (rs.next()) {
             Long id = rs.getLong(1);
             return id;
         }
         return 0L;
     }//fecha metodo
-    
-    public boolean delete(Long id) throws SQLException{
+
+    public boolean delete(Long id) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {

@@ -24,13 +24,13 @@ public class BaseDAO {
             e.printStackTrace();
         }
     }//fecha construtor
-    
-    protected Connection getConnection() throws SQLException{
+
+    protected Connection getConnection() throws SQLException {
         //URL de conexão com o banco de dados
         String url = "jdbc:mysql://localhost:3306/livro";
         //Conecta utilizando a URL, usuario e senha
-        Connection conn = DriverManager.getConnection(url, "livro","livro123");
+        Connection conn = DriverManager.getConnection(url, "livro", "livro123");
         return conn;
     }//fecha getConnection
-    
+
 }//fecha classe
